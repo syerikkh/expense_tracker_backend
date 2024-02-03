@@ -7,7 +7,6 @@
     "express": "^4.18.2",
     "jsonwebtoken": "^9.0.2",
     "node": "^21.2.0",
-    "nodemon": "^3.0.3",
     "postgres": "^3.4.3"
   },
   "name": "expense-tracker-backend",
@@ -19,5 +18,8 @@
   },
   "keywords": [],
   "author": "",
-  "license": "ISC"
+  "license": "ISC",
+  "devDependencies": {
+    "nodemon": "^3.0.3"
+  }
 }

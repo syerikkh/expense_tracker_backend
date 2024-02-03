@@ -1,7 +1,8 @@
 const postgres = require('postgres');
 require('dotenv').config();
 
-let { PGHOST, PGDATABASE, PGUSER, PGPASSWORD, ENDPOINT_ID } = process.env;
+let { PGHOST, PGDATABASE, PGUSER, PGPASSWORD } = process.env;
+
 
 const sql = postgres({
     host: PGHOST,
@@ -9,10 +10,7 @@ const sql = postgres({
     username: PGUSER,
     password: PGPASSWORD,
     port: 5432,
-    ssl: 'require',
-    connection: {
-        options: `project=${ENDPOINT_ID}`,
-    },
+    ssl: "require",
 });
 
 exports.sql = sql;
