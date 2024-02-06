@@ -15,11 +15,11 @@ router.get('/transactions', async (req, res) => {
 });
 
 router.post('/transactions', async (req, res) => {
-    const { name, amount, transaction_type, description, date, time, category_id } = req.body;
+    const { user_id, name, amount, transaction_type, description, date, time, category_id } = req.body;
 
     try {
-        const transactions = await sql`INSERT INTO geldTransactions (name, amount, transaction_type, description, transaction_date, transaction_time, createdAt, updatedAt,category_id)
-            VALUES (${name}, ${amount}, ${transaction_type}, ${description}, ${date}, ${time}, NOW(), NOW(), ${category_id})`;
+        const transactions = await sql`INSERT INTO geldTransactions (user_id,name, amount, transaction_type, description, transaction_date, transaction_time, createdAt, updatedAt,category_id)
+            VALUES (${user_id}, ${name}, ${amount}, ${transaction_type}, ${description}, ${date}, ${time}, NOW(), NOW(), ${category_id})`;
 
         res.status(201).json({ success: true, data: transactions[0] });
     } catch (error) {
