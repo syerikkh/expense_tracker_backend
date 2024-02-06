@@ -40,7 +40,6 @@ router.get('/profile', verifyToken, async (req, res) => {
     }
 
     const { userId, email } = req.user;
-
     res.status(202).json({ message: `Welcome ${email}, ${userId}` })
 })
 

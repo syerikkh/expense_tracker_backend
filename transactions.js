@@ -10,24 +10,22 @@ dotenv.config();
 const router = express.Router();
 
 router.get('/transactions', async (req, res) => {
-    const data = await sql`SELECT * FROM transactions;`;
+    const data = await sql`SELECT * FROM geldTransactions;`;
     res.send(data);
-})
+});
 
 router.post('/transactions', async (req, res) => {
     const { name, amount, transaction_type, description, date, time } = req.body;
+
     try {
-        const transactions = await sql`INSERT INTO transactions (name, amount, transaction_type, description, createdAt, updatedAt)
-        VALUES (${name}, ${amount}, ${transaction_type}, ${description}, ${date}, ${time})`
+        const transactions = await sql`INSERT INTO geldTransactions (name, amount, transaction_type, description, transaction_date, transaction_time, createdAt, updatedAt)
+            VALUES (${name}, ${amount}, ${transaction_type}, ${description}, ${date}, ${time}, NOW(), NOW())`;
 
         res.status(201).json({ success: true, data: transactions[0] });
     } catch (error) {
-        console.error(error)
-        res.status(500).json({ success: false, error: 'Failed to create transactions' })
+        console.error(error);
+        res.status(500).json({ success: false, error: 'Failed to create transactions' });
     }
-})
-
-
-
+});
 
 module.exports = router;
