@@ -11,7 +11,7 @@ const router = express.Router();
 
 router.get('/transactions', async (req, res) => {
     const data = await sql`SELECT * FROM geldTransactions;`;
-    res.send(data);
+    res.json(data);
 });
 
 router.post('/transactions', async (req, res) => {

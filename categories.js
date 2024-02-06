@@ -16,14 +16,13 @@ router.get("/categories", async (req, res) => {
 })
 
 router.post("/categories", async (req, res) => {
-    const { name, description, category_image } = req.body;
+    const { name, category_image } = req.body;
     try {
         console.log('Name:', name);
-        console.log('Description:', description);
         console.log('Category Image:', category_image);
 
         const categories = await sql`INSERT INTO categories (name, description, createdAt, updatedAt, category_image)
-            VALUES (${name}, ${description}, NOW(), NOW(), ${category_image})`;
+            VALUES (${name}, NOW(), NOW(), ${category_image})`;
 
         res.status(201).json({ success: true, data: categories[0] });
     } catch (error) {
