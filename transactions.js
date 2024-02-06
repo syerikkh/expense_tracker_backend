@@ -15,11 +15,11 @@ router.get('/transactions', async (req, res) => {
 });
 
 router.post('/transactions', async (req, res) => {
-    const { name, amount, transaction_type, description, date, time } = req.body;
+    const { name, amount, transaction_type, description, date, time, category_id } = req.body;
 
     try {
-        const transactions = await sql`INSERT INTO geldTransactions (name, amount, transaction_type, description, transaction_date, transaction_time, createdAt, updatedAt)
-            VALUES (${name}, ${amount}, ${transaction_type}, ${description}, ${date}, ${time}, NOW(), NOW())`;
+        const transactions = await sql`INSERT INTO geldTransactions (name, amount, transaction_type, description, transaction_date, transaction_time, createdAt, updatedAt,category_id)
+            VALUES (${name}, ${amount}, ${transaction_type}, ${description}, ${date}, ${time}, NOW(), NOW(), ${category_id})`;
 
         res.status(201).json({ success: true, data: transactions[0] });
     } catch (error) {
@@ -27,5 +27,14 @@ router.post('/transactions', async (req, res) => {
         res.status(500).json({ success: false, error: 'Failed to create transactions' });
     }
 });
+
+router.delete('/transactions', async (req, res) => {
+    try {
+        await sql`DELETE FROM geldTransactions;`
+        res.status(202).json({ success: true, message: 'Successfully deleted' })
+    } catch (error) {
+        res.status(500).json({ success: false, error: 'Failed to delete' })
+    }
+})
 
 module.exports = router;
