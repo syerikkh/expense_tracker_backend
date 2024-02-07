@@ -57,7 +57,7 @@ router.post("/categories", verifyToken, async (req, res) => {
 //     return res.status(202).json({ success: true, message: "Successfully deleted" })
 // })
 
-router.delete("/categories", async (req, res) => {
+router.delete("/categories", verifyToken, async (req, res) => {
     try {
         await sql`DELETE FROM categories`
         res.status(202).json({ success: true, message: "Deleted all categories" })
