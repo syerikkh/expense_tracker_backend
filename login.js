@@ -54,11 +54,13 @@ router.post("/login", async (req, res) => {
 
         const result = await bcrypt.compare(password, users[0].password);
 
+        expriresIn = '2m';
+
         if (result) {
             const token = jwt.sign({
                 userId: users[0].id,
                 email: users[0].email,
-            }, secretKey)
+            }, secretKey, { expiresIn })
             return res.status(200).json({
                 success: true,
                 data: {
