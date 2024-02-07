@@ -4,24 +4,37 @@ const { sql } = require('./db');
 const bcrypt = require('bcrypt');
 const secretKey = process.env.SECRET_KEY;
 const dotenv = require('dotenv');
-const { route } = require("./login");
+const jwt = require("jsonwebtoken");
 dotenv.config();
+
 
 const router = express.Router();
 
 
-router.get("/categories", async (req, res) => {
+const verifyToken = ((req, res, next) => {
+    const authHeader = req.headers["authorization"];
+    const token = authHeader && authHeader.split(' ')[1];
+    if (token == null) return res.status(401).json("Token null");
+
+    jwt.verify(token, secretKey, (err, user) => {
+        if (err) return res.status(403).json('error')
+        req.user = user
+        next()
+    })
+})
+
+router.get("/categories", verifyToken, async (req, res) => {
     const categoriesData = await sql`SELECT * FROM categories;`
     res.send(categoriesData);
 })
 
-router.post("/categories", async (req, res) => {
+router.post("/categories", verifyToken, async (req, res) => {
     const { name, category_image } = req.body;
     try {
         console.log('Name:', name);
         console.log('Category Image:', category_image);
 
-        const categories = await sql`INSERT INTO categories (name, description, createdAt, updatedAt, category_image)
+        const categories = await sql`INSERT INTO categories (name, createdAt, updatedAt, category_image)
             VALUES (${name}, NOW(), NOW(), ${category_image})`;
 
         res.status(201).json({ success: true, data: categories[0] });
