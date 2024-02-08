@@ -29,13 +29,13 @@ router.get("/categories", verifyToken, async (req, res) => {
 })
 
 router.post("/categories", verifyToken, async (req, res) => {
-    const { name, category_image } = req.body;
+    const { user_id, name, category_image } = req.body;
     try {
         console.log('Name:', name);
         console.log('Category Image:', category_image);
 
-        const categories = await sql`INSERT INTO categories (name, createdAt, updatedAt, category_image)
-            VALUES (${name}, NOW(), NOW(), ${category_image})`;
+        const categories = await sql`INSERT INTO categories (user_id,name, createdAt, updatedAt, category_image)
+            VALUES (${user_id},${name}, NOW(), NOW(), ${category_image})`;
 
         res.status(201).json({ success: true, data: categories[0] });
     } catch (error) {
