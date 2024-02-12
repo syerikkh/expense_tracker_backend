@@ -23,7 +23,7 @@ const verifyToken = ((req, res, next) => {
     })
 })
 
-router.get('/transactions', verifyToken, async (req, res) => {
+router.get('/transactions', async (req, res) => {
     const data = await sql`SELECT * FROM geldTransactions;`;
     res.json(data);
 });
@@ -49,6 +49,17 @@ router.delete('/transactions', async (req, res) => {
     } catch (error) {
         res.status(500).json({ success: false, error: 'Failed to delete' })
     }
+})
+
+router.delete('/transactions/:transactionId', verifyToken, async (req, res) => {
+    const transactionId = req.params.transactionId;
+    const existingTransaction = await sql`SELECT * FROM geldTransactions WHERE id = ${transactionId}`;
+
+    if (!existingTransaction || existingTransaction.length === 0) {
+        return res.status(404).json({ success: false, error: "Transaction not found" })
+    }
+    await sql`DELETE FROM geldTransactions WHERE id=${transactionId}`
+    res.status(202).json({ success: true, message: "Successfully deleted" })
 })
 
 module.exports = router;
