@@ -8,7 +8,6 @@ const dotenv = require('dotenv');
 dotenv.config();
 
 const router = express.Router();
-router.use(express.json());
 
 const posts = [
     {
@@ -22,21 +21,22 @@ const posts = [
 
 ];
 
-
 const verifyToken = (req, res, next) => {
-    console.log('Request Headers:', req.headers);
-    const authHeader = req.headers["Authorization"];
-    console.log("Authorization Header:", authHeader);
-    const token = authHeader && authHeader.split(' ')[1];
-    if (token == null) return res.status(401).json("Token null");
+    const token = req.headers.authorization;
 
-    jwt.verify(token, secretKey, (err, user) => {
-        if (err) return res.status(403).json('error');
-        req.user = user;
-        next();
-    });
-};
+    if (!token) {
+        return res.status(403).json({ error: "Token not provided" });
+    }
 
+    jwt.verify(token, secretKey, (err, decoded) => {
+        if (err) {
+            return res.status(401).json({ error: "Failed to authenticate token" })
+        }
+    })
+
+    req.usedId = decoded.userId;
+    next();
+}
 
 router.get('/profile', verifyToken, async (req, res) => {
     if (!req.user) {
